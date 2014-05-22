@@ -7,7 +7,7 @@ function __autoload($className)
 {
 
     // change this
-    $BASE = str_replace("/", DIRECTORY_SEPARATOR, "C:/php/src/");
+    $BASE = str_replace("/", DIRECTORY_SEPARATOR, "/usr/local/src/php/");
     
     $className = ltrim($className, '\\');
     $fileName  = '';
@@ -20,7 +20,8 @@ function __autoload($className)
     $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
     $fileName = "vendors\\" . $fileName;
 
-    require($BASE . $fileName);
+	$path = str_replace("\\", DIRECTORY_SEPARATOR, $BASE . $fileName);
+	require_once($path);
 }
 
 require_once("routes.php");

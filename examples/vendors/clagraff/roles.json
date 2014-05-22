@@ -1,0 +1,14 @@
+{
+    "guest": {
+        "can": ["view", "login", "logout"],
+        "user": {
+            "can": ["edit", "create", "delete"],
+            "root": {
+                "can": ["generate", "users"]
+            }
+        },
+        "ghost": {
+            "cannot": ["login", "logout"]
+        }
+    }
+}

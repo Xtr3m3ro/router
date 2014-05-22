@@ -6,6 +6,7 @@ class Controller {
 
 
     public static function index($request) {
+		$Rbac = new \clagraff\Rbac();
         $request->body = "index";
         return $request;
     }
