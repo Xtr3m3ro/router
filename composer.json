@@ -1,0 +1,27 @@
+{
+    "name": "clagraff/router",
+    "type": "library",
+    "description": "A lightweight and simple PHP router, for use in developing web applications.",
+    "keywords": [
+        "php",
+        "router",
+    ],
+    "homepage": "http://github.com/clagraff/router",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Curtis La Graff",
+            "email": "clagraff@gmail.com",
+            "homepage": "http://github.com/clagraff",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "files": [
+            "src/Router.php"
+        ]
+    }
+}
