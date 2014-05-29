@@ -2,7 +2,7 @@
 /*
     You can use this file when running PHP's internal server.
     The command would look something like:
-        >> php -S localhost:80 router.php
+        >> php -S localhost:80 index.php
 */
 
 
