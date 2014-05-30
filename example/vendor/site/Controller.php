@@ -36,6 +36,9 @@ class Controller {
         return $request;
     }
     
+    public static function request(&$req) {
+        $req->body = print_r($_GET, true);
+    }
     
     public static function missing($request) {
         $body = "<h1>404 Error</h1><h2>Page not found!</h2>";

@@ -1,6 +1,6 @@
 <?php
-
 namespace clagraff;
+
 
 class Router {
     public $basePath;
@@ -177,9 +177,9 @@ class Router {
         $request->uri = $_SERVER["REQUEST_URI"];
         
         $parseUrl = parse_url($request->url);
-        $request->meta->query = $parseUrl["query"];
-        $request->meta->fragment = $parseUrl["fragment"];
-        
+        if (isset($parseUrl["query"])) {
+            $request->meta->query = $parseUrl["query"];
+        }
         
         $route = $this->findRoute($request);
         $groups = [];
@@ -190,18 +190,17 @@ class Router {
             $request->status = 200;
             $groups = $this->getUrlGroups($request, $route);
             
-  
             $this->setup();
             try {
-                $request = call_user_func_array($route->handler, [$request] + $groups);
+                $return = call_user_func_array($route->handler, [&$request] + $groups);
+                if (!is_null($return)) {
+                    $request = $return;
+                }
                 
             } catch (\Exception $error) {
                 $request->meta->error = $error;
                 $request->status = 500;
             }
-
-            $this->tearDown();
-            
         }
         if (array_key_exists($request->status, $this->status_handlers)) {
             $request = call_user_func_array($this->status_handlers[$request->status], [$request] + $groups);
@@ -210,21 +209,25 @@ class Router {
         }
         
         print($request->body);
+        $this->tearDown();
     }
     
     private function setup() {
+        register_shutdown_function(Array($this, "fetchRequestFatal"));
+        
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+        
         if ($this->catch_all) {
             set_error_handler(function($errno, $errstr, $errfile, $errline) {
                 throw new \RuntimeException($errstr . " on line " . $errline . " in file " . $errfile);
             });  
         }
-        register_shutdown_function(Array($this, "fetchRequestFatal"));
-        
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
+        ob_start();
     }
     
     private function tearDown() {
+        ob_end_flush();
         if ($this->catch_all) {
             restore_error_handler();
         }
