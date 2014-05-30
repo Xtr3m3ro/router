@@ -8,15 +8,15 @@ class Router {
     public $debug = true;
     public $delimiter = "#";
     public $routes = Array();
-    public $schema;
+    public $scheme;
     public $status_handlers = Array();
     
     private $methods = Array("post", "get", "post", "delete");
     private $request;
     
     
-    public function __construct($schema = "http", $path = "/", $debug = true) {
-        $this->schema = $schema . "://";
+    public function __construct($scheme = "http", $path = "/", $debug = true) {
+        $this->scheme = $scheme . "://";
         $this->basePath = $path;
         $this->debug = $debug;
         $this->setHandle(200, [$this, "fetchRequestBody"]);
@@ -43,13 +43,21 @@ class Router {
     
     private function createRequest() {
         $request = new \stdClass;
+        
         $request->body = "";
+        
         $request->method = "";
         $request->url = "";
         $request->uri = "";
+        
         $request->handler = "";
+        
         $request->status = 500;
+        
         $request->meta = new \stdClass;
+        $request->meta->query = null;
+        $request->meta->fragment = null;
+        $request->meta->error = null;
         
         return $request;
     }
@@ -165,8 +173,12 @@ class Router {
     public function route() {
         $request = $this->createRequest();
         $request->method = $_SERVER["REQUEST_METHOD"];
-        $request->url = $this->schema . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+        $request->url = $this->scheme . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $request->uri = $_SERVER["REQUEST_URI"];
+        
+        $parseUrl = parse_url($request->url);
+        $request->meta->query = $parseUrl["query"];
+        $request->meta->fragment = $parseUrl["fragment"];
         
         
         $route = $this->findRoute($request);
