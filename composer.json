@@ -4,7 +4,7 @@
     "description": "A lightweight and simple PHP router, for use in developing web applications.",
     "keywords": [
         "php",
-        "router",
+        "router"
     ],
     "homepage": "http://github.com/clagraff/router",
     "license": "MIT",
